@@ -1,7 +1,7 @@
 {
 	"_type": "Project",
 	"_id": "AAAAAAFF+h6SjaM2Hec=",
-	"name": "Untitled",
+	"name": "Text Editor Project",
 	"ownedElements": [
 		{
 			"_type": "UMLModel",
@@ -186,13 +186,30 @@
 											"height": 13,
 											"text": "+save_as(cls, path)",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAGO2Jt7Pqdac4U=",
+											"_parent": {
+												"$ref": "AAAAAAGO2GM5uqcFU64="
+											},
+											"model": {
+												"$ref": "AAAAAAGO2Jt7PKdXAOk="
+											},
+											"font": "Arial;13;0",
+											"left": 773,
+											"top": 453,
+											"width": 114.08349609375,
+											"height": 13,
+											"text": "+run(self)",
+											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 768,
 									"top": 403,
 									"width": 124.08349609375,
-									"height": 53
+									"height": 68
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -232,7 +249,7 @@
 							"left": 768,
 							"top": 368,
 							"width": 123.08349609375,
-							"height": 88,
+							"height": 103,
 							"nameCompartment": {
 								"$ref": "AAAAAAGO2GM5uab/CoM="
 							},
@@ -339,6 +356,25 @@
 										"$ref": "AAAAAAGO2GVwQqdBJSc="
 									},
 									"name": "path",
+									"type": ""
+								}
+							]
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAGO2Jt7PKdXAOk=",
+							"_parent": {
+								"$ref": "AAAAAAGO2GM5uab8x6M="
+							},
+							"name": "run",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGO2JuH2adexLw=",
+									"_parent": {
+										"$ref": "AAAAAAGO2Jt7PKdXAOk="
+									},
+									"name": "self",
 									"type": ""
 								}
 							]
