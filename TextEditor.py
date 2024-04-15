@@ -28,7 +28,7 @@ class TextEditor():
         vsb = tk.Scrollbar(window, orient=tk.VERTICAL, command=text.yview)
         text['yscrollcommand'] = vsb.set
 
-        vsb.grid(row=0, column=1, sticky=tk.E)
+        vsb.grid(row=0, column=1, sticky=tk.NS)
         text.grid(row=0, column=0, sticky=tk.NSEW)
 
         window.mainloop()
