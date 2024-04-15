@@ -8,13 +8,11 @@ class TextEditor():
         """Initialize Text Editor"""
         window = tk.Tk()
         window.title("Text Editor")
+        window.option_add('*tearOFF', False)
         window.grid_propagate(False)
         window.grid_rowconfigure(0, weight=1)
         window.grid_columnconfigure(0, weight=1)
         window.geometry("1200x720")
-
-        # Create ScrolledText within window
-        st = scrolledtext.ScrolledText(window)
 
         # Create text widget to contain user keyboard input
         text = tk.Text(window, 
@@ -24,10 +22,20 @@ class TextEditor():
                        pady=10,
                        )
         
-        # Add vertical scroll bar (vsb)
+        # Add vertical scroll bar (vsb) and tie text widget scroll to VSB
+        # vertical scroll. 
         vsb = tk.Scrollbar(window, orient=tk.VERTICAL, command=text.yview)
         text['yscrollcommand'] = vsb.set
 
+        # Create menu widget
+        menubar = tk.Menu(window)
+        window['menu'] = menubar
+        menu_file = tk.Menu(menubar)
+        menu_edit = tk.Menu(menubar)
+        menubar.add_cascade(menu=menu_file, label="File")
+        menubar.add_cascade(menu=menu_edit, label="Edit")
+
+        # Add widgets to frame
         vsb.grid(row=0, column=1, sticky=tk.NS)
         text.grid(row=0, column=0, sticky=tk.NSEW)
 
