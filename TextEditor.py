@@ -100,16 +100,25 @@ class TextEditor(tk.Tk):
         """Loop and respond to keyboard and mouse events"""
         
     def new(self):
-        """Save text file"""
-        pass
+        """Start new text editor state"""
+        self.name = ""
+        self.file_path = ""
+        self.window.title("Untitled")
+        self.text.delete('1.0', tk.END)
 
     def new_window(self):
-        """Save text file"""
-        pass
+        """Create new text window"""
+        te = TextEditor()
     
     def open(self):
         """Open saved text file"""
-        pass
+        file = fd.askopenfile(mode="r", title="Open a file")
+
+        # Read contents and replace text within text window
+        contents = file.read()
+        self.text.delete('1.0', tk.END)
+        self.text.insert('1.0', contents)
+        self.window.title(file.name)
 
     def save(self):
         """Save text file"""
@@ -151,7 +160,7 @@ class TextEditor(tk.Tk):
 
     def exit(self):
         """Exit text editor"""
-        pass
+        self.window.destroy()
 
     def undo(self):
         """Undo last edit"""
