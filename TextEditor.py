@@ -6,7 +6,6 @@ from tkinter import filedialog as fd
 class TextEditor(tk.Tk):
     def __init__(self) -> None:
         """Initialize Text Editor"""
-        self.name = ""
         self.file_path = ""
         self.window = tk.Tk()
         self.window.title("Untitled")
@@ -18,7 +17,8 @@ class TextEditor(tk.Tk):
 
         # Create text widget to contain user keyboard input
         self.text = tk.Text(self.window, 
-                       wrap=tk.CHAR, 
+                       wrap=tk.CHAR,
+                       undo=True, 
                        maxundo=100, 
                        padx=10, 
                        pady=10,
@@ -64,12 +64,12 @@ class TextEditor(tk.Tk):
         menu_file.add_command(label="Exit", command=self.exit)
 
         # Add edit menu items
-        menu_edit.add_command(label="Undo", command=self.undo)
+        menu_edit.add_command(label="Undo", command=self.text.edit_undo)
+        menu_edit.add_command(label="Redo", command=self.text.edit_redo)
         menu_edit.add_separator()
-        menu_edit.add_command(label="Cut")
-        menu_edit.add_command(label="Copy")
-        menu_edit.add_command(label="Paste")
-        menu_edit.add_command(label="Delete")
+        menu_edit.add_command(label="Cut", command=self.cut)
+        menu_edit.add_command(label="Copy", command=self.copy)
+        menu_edit.add_command(label="Paste", command=self.paste)
         menu_edit.add_separator()
         menu_edit.add_command(label="Select All")
         menu_edit.add_command(label="Time/Date")
@@ -101,7 +101,6 @@ class TextEditor(tk.Tk):
         
     def new(self):
         """Start new text editor state"""
-        self.name = ""
         self.file_path = ""
         self.window.title("Untitled")
         self.text.delete('1.0', tk.END)
@@ -119,10 +118,11 @@ class TextEditor(tk.Tk):
         self.text.delete('1.0', tk.END)
         self.text.insert('1.0', contents)
         self.window.title(file.name)
+        self.file_path = file.name
 
     def save(self):
         """Save text file"""
-        if self.name:
+        if self.file_path:
             try: 
                 with open(self.file_path, 'w') as file:
                     text_content = self.text.get("1.0", tk.END)
@@ -144,9 +144,8 @@ class TextEditor(tk.Tk):
                     text_content = self.text.get("1.0", tk.END)
                     file.write(text_content)
 
-                # Rename window title and grab file name
+                # Rename window title
                 self.window.title(f"{self.file_path}")
-                self.name = self.file_path.split('/')[-1]
             except Exception as e:
                 print("Could not open file. ")
 
@@ -162,9 +161,18 @@ class TextEditor(tk.Tk):
         """Exit text editor"""
         self.window.destroy()
 
-    def undo(self):
-        """Undo last edit"""
-        pass
+    def cut(self):
+        """Cut text"""
+        self.text.event_generate("<<Cut>>")
+    
+    def copy(self):
+        """Copy text"""
+        self.text.event_generate("<<Copy>>")
+    
+    def paste(self):
+        """Paste text"""
+        self.text.event_generate("<<Paste>>")
+
 
 if __name__ == "__main__":
     te = TextEditor()
