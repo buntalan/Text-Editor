@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog as fd
+import time
 
 """Imitation program of the text editor for windows."""
 
@@ -71,8 +72,8 @@ class TextEditor(tk.Tk):
         menu_edit.add_command(label="Copy", command=self.copy)
         menu_edit.add_command(label="Paste", command=self.paste)
         menu_edit.add_separator()
-        menu_edit.add_command(label="Select All")
-        menu_edit.add_command(label="Time/Date")
+        menu_edit.add_command(label="Select All", command=self.select_all)
+        menu_edit.add_command(label="Time/Date", command=self.time_date)
 
         # Add format menu items
         menu_format.add_checkbutton(label="Word Wrap")
@@ -93,6 +94,9 @@ class TextEditor(tk.Tk):
         vsb.grid(row=0, column=1, sticky=tk.NS)
         hsb.grid(row=1, column=0, sticky=tk.EW)
         self.text.grid(row=0, column=0, sticky=tk.NSEW)
+
+        # Add keybind
+
 
         self.window.mainloop()
 
@@ -172,6 +176,14 @@ class TextEditor(tk.Tk):
     def paste(self):
         """Paste text"""
         self.text.event_generate("<<Paste>>")
+
+    def select_all(self):
+        """Select all text"""
+        self.text.tag_add(tk.SEL, "1.0", tk.END)
+
+    def time_date(self):
+        """Print time/date to text window"""
+        self.text.insert(tk.INSERT, time.ctime())
 
 
 if __name__ == "__main__":
