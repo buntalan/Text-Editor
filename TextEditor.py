@@ -1,21 +1,23 @@
 import tkinter as tk
-import tkinter.scrolledtext as scrolledtext
+from tkinter import filedialog as fd
 
 """Imitation program of the text editor for windows."""
 
-class TextEditor():
+class TextEditor(tk.Tk):
     def __init__(self) -> None:
         """Initialize Text Editor"""
-        window = tk.Tk()
-        window.title("Text Editor")
-        window.option_add('*tearOFF', False)
-        window.grid_propagate(False)
-        window.grid_rowconfigure(0, weight=1)
-        window.grid_columnconfigure(0, weight=1)
-        window.geometry("1200x720")
+        self.name = ""
+        self.file_path = ""
+        self.window = tk.Tk()
+        self.window.title("Untitled")
+        self.window.option_add('*tearOFF', False)
+        self.window.grid_propagate(False)
+        self.window.grid_rowconfigure(0, weight=1)
+        self.window.grid_columnconfigure(0, weight=1)
+        self.window.geometry("1280x720")
 
         # Create text widget to contain user keyboard input
-        text = tk.Text(window, 
+        self.text = tk.Text(self.window, 
                        wrap=tk.CHAR, 
                        maxundo=100, 
                        padx=10, 
@@ -24,17 +26,17 @@ class TextEditor():
         
         # Add vertical scroll bar (vsb) and tie text widget scroll to VSB
         # vertical scroll. 
-        vsb = tk.Scrollbar(window, orient=tk.VERTICAL, command=text.yview)
-        text['yscrollcommand'] = vsb.set
+        vsb = tk.Scrollbar(self.window, orient=tk.VERTICAL, command=self.text.yview)
+        self.text['yscrollcommand'] = vsb.set
 
         # Add horizontal scroll bar (hsb) and tie widget horizontal
         # scroll to HSB
-        hsb = tk.Scrollbar(window, orient=tk.HORIZONTAL, command=text.xview)
-        text['xscrollcommand'] = hsb.set
+        hsb = tk.Scrollbar(self.window, orient=tk.HORIZONTAL, command=self.text.xview)
+        self.text['xscrollcommand'] = hsb.set
 
         # Create menu widget
-        menubar = tk.Menu(window, tearoff=0)
-        window['menu'] = menubar
+        menubar = tk.Menu(self.window, tearoff=0)
+        self.window['menu'] = menubar
 
         # Create menu items and add to menubar
         menu_file = tk.Menu(menubar, tearoff=0)
@@ -90,9 +92,9 @@ class TextEditor():
         # Add widgets to frame
         vsb.grid(row=0, column=1, sticky=tk.NS)
         hsb.grid(row=1, column=0, sticky=tk.EW)
-        text.grid(row=0, column=0, sticky=tk.NSEW)
+        self.text.grid(row=0, column=0, sticky=tk.NSEW)
 
-        window.mainloop()
+        self.window.mainloop()
 
     def run(self):
         """Loop and respond to keyboard and mouse events"""
@@ -111,11 +113,33 @@ class TextEditor():
 
     def save(self):
         """Save text file"""
-        pass
+        if self.name:
+            try: 
+                with open(self.file_path, 'w') as file:
+                    text_content = self.text.get("1.0", tk.END)
+                    file.write(text_content)
+            except Exception as e:
+                print("Could not open file. ")
+        else:
+            self.save_as()
+            
 
     def save_as(self):
         """Save file as into directory of user's choice"""
-        pass
+        self.file_path = fd.asksaveasfilename(defaultextension=".txt", 
+                                         filetypes=[("Text files", "*.txt"), 
+                                                    ("All files", "*.*")])
+        if self.file_path:
+            try:
+                with open(self.file_path, 'w') as file:
+                    text_content = self.text.get("1.0", tk.END)
+                    file.write(text_content)
+
+                # Rename window title and grab file name
+                self.window.title(f"{self.file_path}")
+                self.name = self.file_path.split('/')[-1]
+            except Exception as e:
+                print("Could not open file. ")
 
     def page_setup(self):
         """Go through windows print page dialog and configure print"""
