@@ -1,6 +1,9 @@
 import tkinter as tk
+from tkinter.font import Font
 from tkinter import filedialog as fd
+from tkinter import messagebox
 import time
+
 
 """Imitation program of the text editor for windows."""
 
@@ -15,24 +18,30 @@ class TextEditor(tk.Tk):
         self.window.grid_rowconfigure(0, weight=1)
         self.window.grid_columnconfigure(0, weight=1)
         self.window.geometry("1280x720")
+        self.window.iconbitmap('notepad_icon.ico')
 
-        # Create text widget to contain user keyboard input
+        # Create text widget to contain user keyboard input. Create font
+        # object to hold text size. 
+        self.font = Font(family="Helvetica", size=11)
         self.text = tk.Text(self.window, 
                        wrap=tk.CHAR,
                        undo=True, 
                        maxundo=100, 
                        padx=10, 
                        pady=10,
+                       font=self.font
                        )
         
         # Add vertical scroll bar (vsb) and tie text widget scroll to VSB
         # vertical scroll. 
-        vsb = tk.Scrollbar(self.window, orient=tk.VERTICAL, command=self.text.yview)
+        vsb = tk.Scrollbar(self.window, orient=tk.VERTICAL, 
+                           command=self.text.yview)
         self.text['yscrollcommand'] = vsb.set
 
         # Add horizontal scroll bar (hsb) and tie widget horizontal
         # scroll to HSB
-        hsb = tk.Scrollbar(self.window, orient=tk.HORIZONTAL, command=self.text.xview)
+        hsb = tk.Scrollbar(self.window, orient=tk.HORIZONTAL, 
+                           command=self.text.xview)
         self.text['xscrollcommand'] = hsb.set
 
         # Create menu widget
@@ -59,8 +68,8 @@ class TextEditor(tk.Tk):
         menu_file.add_command(label="Save", command=self.save)
         menu_file.add_command(label="Save As...", command=self.save_as)
         menu_file.add_separator()
-        menu_file.add_command(label="Page Setup", command=self.page_setup)
-        menu_file.add_command(label="Print", command=self.print)
+        menu_file.add_command(label="Page Setup (WIP)", command=self.page_setup)
+        menu_file.add_command(label="Print (WIP)", command=self.print)
         menu_file.add_separator()
         menu_file.add_command(label="Exit", command=self.exit)
 
@@ -76,19 +85,25 @@ class TextEditor(tk.Tk):
         menu_edit.add_command(label="Time/Date", command=self.time_date)
 
         # Add format menu items
-        menu_format.add_checkbutton(label="Word Wrap")
+        self.checked = tk.IntVar()
+        menu_format.add_checkbutton(label="Word Wrap", 
+                                    onvalue=1, 
+                                    offvalue=0, 
+                                    variable=self.checked, 
+                                    command=self.word_wrap)
         menu_format.add_command(label="Font...")
 
         # Add view menu items
         menu_zoom = tk.Menu(menu_view, tearoff=0)
-        menu_zoom.add_command(label="Zoom In")
-        menu_zoom.add_command(label="Zoom Out")
-        menu_zoom.add_command(label="Restore Default Zoom")
+        menu_zoom.add_command(label="Zoom In", command=self.zoom_in)
+        menu_zoom.add_command(label="Zoom Out", command=self.zoom_out)
+        menu_zoom.add_command(label="Restore Default Zoom", 
+                              command=self.restore_default_zoom)
         menu_view.add_cascade(menu=menu_zoom, label="Zoom")
         menu_view.add_checkbutton(label="Status Bar")
         
         # Add help menu item
-        menu_help.add_command(label="About Text Editor")
+        menu_help.add_command(label="About Text Editor", command=self.about_me)
 
         # Add widgets to frame
         vsb.grid(row=0, column=1, sticky=tk.NS)
@@ -184,6 +199,37 @@ class TextEditor(tk.Tk):
     def time_date(self):
         """Print time/date to text window"""
         self.text.insert(tk.INSERT, time.ctime())
+    
+    def word_wrap(self):
+        """Enable/disable word wrap"""
+        checked = self.checked.get()
+        print(checked)
+
+        if checked:
+            self.text.config(wrap=tk.WORD)
+        else:
+            self.text.config(wrap=tk.CHAR)
+
+    def zoom_in(self):
+        """Zoom in, or increase word font"""
+        size = self.font.cget('size')
+        if size < 32:
+            self.font.config(size=size+2)
+
+    def zoom_out(self):
+        """Zoom out, or decrease word font"""
+        size = self.font.cget('size')
+        if size > 8:
+            self.font.config(size=size-2)
+
+    def restore_default_zoom(self):
+        """Reset zoom. or set font to 11"""
+        self.font.config(size=11)
+
+    def about_me(self):
+        messagebox.showinfo("About Me", "Made using tkinter and for fun. :)\n"
+                            "Many things are WIP. Will improve this further "
+                            "when I get the chance. ")
 
 
 if __name__ == "__main__":
